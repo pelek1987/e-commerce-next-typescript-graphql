@@ -3,8 +3,10 @@ import { ProductListItem } from "../../components/Product";
 import { useRouter } from "next/router";
 import { first } from "../../utils/functions";
 
-const getProducts = async (url: string) => {
-  const res = await fetch(url);
+const getProducts = async (page: number): Promise<StoreApiResponse[]> => {
+  const res = await fetch(
+    `https://naszsklep-api.vercel.app/api/products?take=25&offset=${page * 25}`
+  );
   const data: StoreApiResponse[] = await res.json();
   return data;
 };
@@ -12,12 +14,8 @@ const getProducts = async (url: string) => {
 const ProductsCSRPage = () => {
   const { query } = useRouter();
   const pageIndex = parseInt(first(query.pageIndex) || "1", 10);
-  const { data, isLoading, error } = useQuery("products", () =>
-    getProducts(
-      `https://naszsklep-api.vercel.app/api/products?take=25&offset=${
-        pageIndex * 25
-      }`
-    )
+  const { data, isLoading, error } = useQuery(["products", pageIndex], () =>
+    getProducts(pageIndex)
   );
 
   if (isLoading) {
