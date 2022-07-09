@@ -7,7 +7,7 @@ const ProductsPage = ({
   return (
     <ul className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {data.map((product) => (
-        <li key={product.id} className="p-4 shadow-lg border-2">
+        <li key={product.id} className="shadow-lg border-2">
           <ProductListItem
             data={{
               id: product.id,
