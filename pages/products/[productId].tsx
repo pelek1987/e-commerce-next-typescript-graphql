@@ -2,7 +2,8 @@ import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import { Main } from "../../components/Main";
 import { ProductDetails } from "../../components/Product";
-import { InferGetStaticPaths } from "../../types/InferGetStaticPaths";
+import { serialize } from "next-mdx-remote/serialize";
+import { InferGetStaticPaths, MarkdownResult } from "../../types/utils";
 
 const ProductIdPage = ({
   data,
@@ -75,9 +76,20 @@ export const getStaticProps = async ({
     `https://naszsklep-api.vercel.app/api/products/${params?.productId}`
   );
   const data: FakeStoreApiResponse | null = await res.json();
+
+  if (!data) {
+    return {
+      props: {},
+      notFound: true,
+    };
+  }
+
   return {
     props: {
-      data,
+      data: {
+        ...data,
+        longDescription: await serialize(data.longDescription),
+      },
     },
   };
 };
