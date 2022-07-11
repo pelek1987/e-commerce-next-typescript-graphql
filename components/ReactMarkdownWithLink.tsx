@@ -13,14 +13,23 @@ export const ReactMarkdownWithLink = ({
     <MDXRemote
       {...children}
       components={{
-        a: ({ href, ...props }) =>
-          href ? (
-            <Link href={href}>
-              <a {...props}></a>
-            </Link>
-          ) : (
-            <a {...props} />
-          ),
+        a: ({ href, ...props }) => {
+          if (!href) {
+            return <a {...props} />;
+          } else if (
+            (process.env.NEXT_PUBLIC_SERVER_ENDPOINT &&
+              !href.includes(process.env.NEXT_PUBLIC_SERVER_ENDPOINT)) ||
+            !href.startsWith("/")
+          ) {
+            return <a href={href} {...props} rel="noopener noreferrer"></a>;
+          } else {
+            return (
+              <Link href={href}>
+                <a {...props}></a>
+              </Link>
+            );
+          }
+        },
       }}
     />
   );
