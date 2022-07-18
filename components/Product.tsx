@@ -4,6 +4,7 @@ import Image from "next/image";
 import { NextSeo } from "next-seo";
 import { ReactMarkdownWithLink } from "./ReactMarkdownWithLink";
 import { MarkdownResult } from "../types/utils";
+import { useCartState } from "./Cart/CartContext";
 
 interface IProductDetails {
   id: number;
@@ -72,6 +73,8 @@ interface ProductListItemProps {
 }
 
 export const ProductListItem = ({ data }: ProductListItemProps) => {
+  const { addItemToCart } = useCartState();
+
   return (
     <>
       <div className="bg-white p-4">
@@ -84,11 +87,26 @@ export const ProductListItem = ({ data }: ProductListItemProps) => {
           objectFit="contain"
         />
       </div>
-      <Link href={`/products/${data.id}`}>
-        <a>
-          <h2 className="p-4 text-2xl font-bold">{data.title}</h2>
-        </a>
-      </Link>
+      <div className="p-4">
+        <Link href={`/products/${data.id}`}>
+          <a>
+            <h2 className="pb-6 text-2xl font-bold">{data.title}</h2>
+          </a>
+        </Link>
+        <button
+          onClick={() =>
+            addItemToCart({
+              id: data.id,
+              title: data.title,
+              price: 19.99,
+              count: 1,
+            })
+          }
+          className="text-white bg-gradient-to-r hover:bg-gradient-to-l from-purple-800 to-blue-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+        >
+          Add to cart
+        </button>
+      </div>
     </>
   );
 };
