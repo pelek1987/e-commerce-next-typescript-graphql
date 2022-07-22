@@ -7,7 +7,7 @@ import { MarkdownResult } from "../types/utils";
 import { useCartState } from "./Cart/CartContext";
 
 interface IProductDetails {
-  id: number;
+  id: string;
   title: string;
   description: string;
   longDescription: MarkdownResult;
